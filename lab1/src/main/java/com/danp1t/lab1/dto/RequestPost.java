@@ -12,5 +12,4 @@ import lombok.Setter;
 public class RequestPost {
     private String title;
     private String text;
-    private RequestAccount owner;
 }

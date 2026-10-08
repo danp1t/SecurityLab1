@@ -35,4 +35,11 @@ public class Post {
         this.text = text;
         this.owner = owner;
     }
+
+    @PrePersist
+    void onCreate() {
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now();
+        }
+    }
 }

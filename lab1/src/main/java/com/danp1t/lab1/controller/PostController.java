@@ -1,9 +1,13 @@
 package com.danp1t.lab1.controller;
 
+import com.danp1t.lab1.dto.RequestPost;
 import com.danp1t.lab1.dto.ResponseAccount;
 import com.danp1t.lab1.dto.ResponsePost;
+import com.danp1t.lab1.model.Account;
 import com.danp1t.lab1.model.Post;
+import com.danp1t.lab1.service.AccountService;
 import com.danp1t.lab1.service.PostService;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -14,9 +18,11 @@ import java.util.List;
 public class PostController {
 
     private final PostService postService;
+    private final AccountService accountService;
 
-    public PostController(PostService postService) {
+    public PostController(PostService postService, AccountService accountService) {
         this.postService = postService;
+        this.accountService = accountService;
     }
 
     @GetMapping("/data")
@@ -30,11 +36,21 @@ public class PostController {
         return posts;
     }
 
-//    @PostMapping("/add_post")
-//    public Post addPost(@RequestBody RequestPost postDTO) {
-//
-//        //Нужно получить RequestAccount -> Account
-//        Post post = new Post(postDTO.getTitle(), postDTO.getText(), new Account(postDTO.getOwner()));
-//        return postService.savePost(post);
-//    }
+    @PostMapping("/add_post")
+    public ResponsePost addPost(@RequestBody RequestPost requestPost, Authentication authentication) {
+        String login = authentication.getName();
+
+        Account account = accountService.findByLogin(login);
+
+        Post post = new Post(requestPost.getTitle(), requestPost.getText(), account);
+        post = postService.savePost(post);
+
+        return new ResponsePost(
+                post.getId(),
+                post.getTitle(),
+                post.getText(),
+                post.getCreatedAt(),
+                new ResponseAccount(post.getOwner().getId(), post.getOwner().getLogin())
+        );
+    }
 }

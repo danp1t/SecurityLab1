@@ -34,4 +34,9 @@ public class AccountService implements UserDetailsService {
         account.setHashPassword(passwordEncoder.encode(account.getHashPassword()));
         return accountRepository.save(account);
     }
+
+    public Account findByLogin(String login) {
+        return accountRepository.findByLogin(login)
+                .orElseThrow(() -> new RuntimeException("Account not found: " + login));
+    }
 }
