@@ -1,15 +1,15 @@
 package com.danp1t.lab1.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.springframework.web.util.HtmlUtils;
 
 @Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class ResponseAccount {
-    private Long id;
-    private String login;
+    private final Long id;
+    private final String login;
+
+    public ResponseAccount(Long id, String login) {
+        this.id = id;
+        this.login = HtmlUtils.htmlEscape(login);
+    }
 }
