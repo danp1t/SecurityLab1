@@ -2,6 +2,7 @@ package com.danp1t.lab1.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
 @Table(name = "Post")
 public class Post {
     @Id
@@ -27,4 +29,10 @@ public class Post {
     @ManyToOne
     @JoinColumn(name = "owner_id", nullable = false)
     private Account owner;
+
+    public Post(String title, String text, Account owner) {
+        this.title = title;
+        this.text = text;
+        this.owner = owner;
+    }
 }

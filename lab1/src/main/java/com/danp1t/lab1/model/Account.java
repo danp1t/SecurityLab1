@@ -1,8 +1,14 @@
 package com.danp1t.lab1.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 public class Account {
 
     @Id
@@ -12,6 +18,11 @@ public class Account {
     @Column(name = "login", nullable = false)
     private String login;
 
+    @Column(name = "hash_password", nullable = false)
+    private String hashPassword;
 
-
+    public Account(String login, String hashPassword) {
+        this.login = login;
+        this.hashPassword = hashPassword;
+    }
 }
