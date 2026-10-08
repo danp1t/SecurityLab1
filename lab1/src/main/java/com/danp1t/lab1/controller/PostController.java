@@ -1,9 +1,7 @@
 package com.danp1t.lab1.controller;
 
-import com.danp1t.lab1.dto.RequestPost;
 import com.danp1t.lab1.dto.ResponseAccount;
 import com.danp1t.lab1.dto.ResponsePost;
-import com.danp1t.lab1.model.Account;
 import com.danp1t.lab1.model.Post;
 import com.danp1t.lab1.service.PostService;
 import org.springframework.web.bind.annotation.*;

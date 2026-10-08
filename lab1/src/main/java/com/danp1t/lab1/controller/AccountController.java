@@ -4,7 +4,6 @@ import com.danp1t.lab1.dto.RequestAccount;
 import com.danp1t.lab1.dto.ResponseAccount;
 import com.danp1t.lab1.model.Account;
 import com.danp1t.lab1.service.AccountService;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,9 +16,8 @@ public class AccountController {
     }
 
     @PostMapping("/api/create_user")
-    @PreAuthorize("permitAll()")
     public ResponseAccount createAccount(@RequestBody RequestAccount requestAccount) {
-        Account account = new Account(requestAccount.getLogin(), accountService.getHashPassword(requestAccount.getPassword()));
+        Account account = new Account(requestAccount.getLogin(), requestAccount.getPassword(), "USER");
         account = accountService.saveAccount(account);
         return new ResponseAccount(account.getId(), account.getLogin());
     }

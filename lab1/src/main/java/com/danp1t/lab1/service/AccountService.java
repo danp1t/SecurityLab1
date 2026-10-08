@@ -2,30 +2,36 @@ package com.danp1t.lab1.service;
 
 import com.danp1t.lab1.model.Account;
 import com.danp1t.lab1.repository.AccountRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AccountService {
+@RequiredArgsConstructor
+public class AccountService implements UserDetailsService {
 
-    @Autowired
-    private AccountRepository accountRepository;
+    private final AccountRepository accountRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public String getHashPassword(String password){
-        PasswordEncoder passwordEncoder = new Argon2PasswordEncoder(
-                16,
-                32,
-                1,
-                65536,
-                3
-        );
+    @Override
+    public @NonNull UserDetails loadUserByUsername(@NonNull String login) throws UsernameNotFoundException {
+        Account account = accountRepository.findByLogin(login)
+                .orElseThrow(() -> new UsernameNotFoundException("Account not found: " + login));
 
-        return passwordEncoder.encode(password);
+        return User.builder()
+                .username(account.getLogin())
+                .password(account.getHashPassword())
+                .roles(account.getRole())
+                .build();
     }
 
-    public Account saveAccount(Account account){
+    public Account saveAccount(Account account) {
+        account.setHashPassword(passwordEncoder.encode(account.getHashPassword()));
         return accountRepository.save(account);
     }
 }

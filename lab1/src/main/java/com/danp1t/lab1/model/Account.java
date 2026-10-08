@@ -15,14 +15,18 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "login", nullable = false)
+    @Column(name = "login", nullable = false, unique = true)
     private String login;
 
     @Column(name = "hash_password", nullable = false)
     private String hashPassword;
 
-    public Account(String login, String hashPassword) {
+    @Column(name = "role", nullable = false)
+    private String role = "USER";
+
+    public Account(String login, String hashPassword, String role) {
         this.login = login;
         this.hashPassword = hashPassword;
+        this.role = role;
     }
 }
