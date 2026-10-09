@@ -9,6 +9,9 @@ on:
 jobs:
   security-scan:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: lab1
     steps:
       - uses: actions/checkout@v4
 
@@ -23,18 +26,18 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.m2/repository/org/owasp/dependency-check-data
-          key: ${{ runner.os }}-nvd-${{ hashFiles('**/pom.xml') }}
+          key: ${{ runner.os }}-nvd-${{ hashFiles('lab1/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-nvd-
 
       - name: Run SAST (SpotBugs) and SCA (OWASP Dependency-Check)
         env:
           NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
-        run: mvn -B clean verify -Psecurity -DnvdApiKey=$NVD_API_KEY
+        run: mvn -B clean verify -Psecurity
 
       - name: Upload Dependency-Check Report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: dependency-check-report
-          path: target/dependency-check-report.html
+          path: lab1/target/dependency-check-report.html
