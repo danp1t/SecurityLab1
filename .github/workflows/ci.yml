@@ -33,7 +33,7 @@ jobs:
       - name: Run SAST (SpotBugs) and SCA (OWASP Dependency-Check)
         env:
           NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
-        run: mvn -B clean verify -Psecurity
+        run: mvn -B clean verify -Psecurity -Dspring-boot.repackage.skip=true
 
       - name: Upload SpotBugs Report
         if: always()
