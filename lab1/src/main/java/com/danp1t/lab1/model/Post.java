@@ -1,5 +1,6 @@
 package com.danp1t.lab1.model;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Table(name = "Post")
 public class Post {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,6 +32,11 @@ public class Post {
     @JoinColumn(name = "owner_id", nullable = false)
     private Account owner;
 
+    @SuppressFBWarnings(
+            value = "EI_EXPOSE_REP2",
+            justification = "JPA entity: mutable by design, managed by Hibernate. "
+                    + "Defensive copy would break @ManyToOne persistence."
+    )
     public Post(String title, String text, Account owner) {
         this.title = title;
         this.text = text;
